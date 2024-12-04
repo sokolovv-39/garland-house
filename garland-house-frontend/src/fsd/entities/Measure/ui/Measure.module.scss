@@ -1,0 +1,40 @@
+.wrapper {
+  border-radius: 32px;
+  background: #fff;
+  width: 708px;
+  flex: 0 0 auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    .left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      .measureId {
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 28px;
+      }
+    }
+    .right {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      .price {
+        font-size: 20px;
+        font-weight: 500;
+      }
+    }
+  }
+  .objectsWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+}

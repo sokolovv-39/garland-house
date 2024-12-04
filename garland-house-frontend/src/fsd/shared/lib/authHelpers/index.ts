@@ -1,0 +1,1 @@
+export { isLocalAuth } from "./isLocalAuth";

@@ -1,0 +1,11 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 150px;
+  align-items: center;
+  height: 100%;
+  gap: 9px;
+  span {
+    word-break: break-all;
+  }
+}

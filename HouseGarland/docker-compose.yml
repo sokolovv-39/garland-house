@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  housegarland.api:
+    image: ${DOCKER_REGISTRY-}housegarlandapi
+    build:
+      context: .
+      dockerfile: HouseGarland.API/Dockerfile

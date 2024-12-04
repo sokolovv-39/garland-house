@@ -1,0 +1,28 @@
+.wrapper {
+  border-radius: 16px;
+  background: var(--black-100, rgba(25, 25, 25, 0.04));
+  padding: 16px 8px;
+  .items {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .titleInput {
+      font-size: 20px;
+      font-weight: 700;
+      line-height: normal;
+      border: none;
+      background: transparent;
+      border-radius: 7px;
+    }
+  }
+  .pickers {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+}

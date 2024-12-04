@@ -1,0 +1,14 @@
+.wrapper {
+  position: relative;
+  cursor: pointer;
+  .image {
+    border-radius: 8px;
+  }
+  .spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    height: 72px;
+  }
+}

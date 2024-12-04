@@ -1,0 +1,41 @@
+import {
+  CurtainBracingEnum,
+  CurtainCableEnum,
+  CurtainGlowModeEnum,
+  CurtainGlowShadeEnum,
+  CurtainSizeEnum,
+  CurtainSurfaceEnum,
+  CurtainType,
+} from "./types";
+
+export const curtainBracings = Object.values(CurtainBracingEnum);
+export const curtainSizes = Object.values(CurtainSizeEnum);
+export const curtainGlowShades = Object.values(CurtainGlowShadeEnum);
+export const curtainGlowMode = Object.values(CurtainGlowModeEnum);
+export const curtainCable = Object.values(CurtainCableEnum);
+export const curtainSurfaces = Object.values(CurtainSurfaceEnum);
+
+export const curtainDefault: CurtainType = {
+  title: "Занавес",
+  size: CurtainSizeEnum.s_2_1,
+  bracing: CurtainBracingEnum.Rope,
+  glowShade: CurtainGlowShadeEnum.Warm,
+  glowMode: CurtainGlowModeEnum.Flickering,
+  cable: CurtainCableEnum.Black,
+  surface: CurtainSurfaceEnum.Wood,
+  priceObj: {
+    s_2_1: 9614,
+    s_2_1dot5: 12500,
+    s_2_2: 14500,
+    s_2_3: 18500,
+    s_2_4: 22198,
+    s_2_6: 29500,
+    s_2_9: 37500,
+  },
+  quantity: 1,
+  contours: 1,
+  powerUnits: 1,
+  tees: 0,
+  extensions_1m: 0,
+  extensions_3m: 0,
+};

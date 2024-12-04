@@ -1,0 +1,47 @@
+{
+  "name": "garland-house-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@atomaro/ui-kit": "^0.1.3",
+    "@pdf-lib/fontkit": "^1.1.1",
+    "@tanstack/eslint-plugin-query": "^5.59.7",
+    "@tanstack/react-query": "^5.59.16",
+    "@types/react-modal": "^3.16.3",
+    "axios": "^1.7.7",
+    "date-fns": "^4.1.0",
+    "lodash": "^4.17.21",
+    "mobx": "^6.13.5",
+    "mobx-react-lite": "^4.0.7",
+    "nanoid": "^5.0.7",
+    "next": "14.2.14",
+    "next-pwa": "^5.6.0",
+    "nextjs-toploader": "^3.6.15",
+    "pdf-lib": "^1.17.1",
+    "react": "^18",
+    "react-calendar": "^5.0.0",
+    "react-dom": "^18",
+    "react-modal": "^3.16.1",
+    "sharp": "^0.33.5"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.13",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@types/video.js": "^7.3.58",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.14",
+    "file-loader": "^6.2.0",
+    "sass": "^1.79.4",
+    "typescript": "^5",
+    "video.js": "^8.19.1"
+  }
+}
