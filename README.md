@@ -1,93 +1,93 @@
 # garland_house
 
+## Суть проекта
 
+Проект делался для комании "Дом Гирлянд". Его цель - автоматизировать создание сметы и коммерческих предложений, расчет цен, расчет комплектующих (шурупы, гайки) по различным типам гирлянд и конструктивных особенностей схем, без необходимости считать их вручную.
+Также включена возможность загрузки визуализаций - созданной в фотошопах примеров реализации заказа, фотографий с объекта после его украшения, и видео. Также есть галерея. Предусмотрена возможность загрузки различных документов (Word, Excel, PDF и др.). Есть удобный чат для коммуникации между сотрудниками
 
-## Getting started
+## Главная польза
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+Раньше менеджмент и сотрудники компании проделывали большую работу по организации заказа. Замерщик, выезжая на объект, должен был не просто определить метраж, необходимые комплектующие, и посчитать их запас (т.к. объект может быть очень далеко от складов), но и учесть все необходимые "мелкие комплектующие" - шурупы, гайки, клеммы, удлинители, тройники, стяжки и т.п. Теперь все это делается автоматически и генерируется смета для склада. Каждый заказ - полная его сводка, с галереей, чатом, отчетами, необходимой информацией. Заказчик был очень доволен алгоритмом автоматического расчета комплектующих.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+Фронтенд использует IndexedDB для всех своих операций и расчетов, включая алгоритмы и медиа. Запросы делаются только по мере необходимости. Поэтому, при перезагрузке страницы, и даже если закрыть браузер без сохранения, при повторном входе все автоматически синхронизируется с сервером. То есть это полное автоматическое сохранение (например, как в Visual Studio Code). При перезагрузке страницы данные ввода во все поля не потеряются, т к всегда сохраняются в IndexedDB.
 
-## Add your files
+## Оффлайн режим
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+Оффлайн режим подразумевает, что при отсутствии связи замерщик сможет заполнить весь заказ, воспользоваться встроенным алгоритмом расчета всех необходимых комплектующих и создать смету. При появлении сети, приложение автоматически синхронизируется с сервером, и добавит заказ в общий пул.
+
+Это реализовано с помощью IndexedDB. В оффлайн режиме все заказы хранятся там, а потом автоматически синхронизируются.
+В оффлайн режиме невозможно просмотреть или загрузить медиа-файлы. В этом у компании нет необходимости, а с нашей стороны это лишняя логика и фичи.
+
+Для работы оффлайн-режима приложение нужно скачать как PWA. Использовал next-pwa для преобразования в PWA.
+
+## Стек
+
+Я занимаю должность фронтенд-разработчика в этом проекте. Использовал Next.js, для запросов TanStack Query и Axios, IndexedDB для оффлайн работы.
+
+Стейт-менеджер - MobX
+
+Для работы с видео - Video.js. Для оптимизации фотографий - встроенный функционал Next.js.
+
+Для генераций смет и коммерческого предложения - PDF-LIB
+
+Другие библиотеки: date-fns, react-calendar, react-modal
+
+Для организации структуры проекта использовался Feature-Sliced Design
+
+## Работа с медиа
+
+На все операции с медиа повешаны удобные лоадеры. При загрузке файлов на странице "Отчет" высвечиваются иконки типов файлов, которые определяются автоматически по расширению
+
+Учитывается соотношения сторон медиа, то есть любая фотография успешно сожмется или растянется. При добавлении фото в раздел "Визуализация", можно их увидеть, скачав КП. При клике на любую фотографию она открыватся в полноэкранном режиме. Для этого активно использовал библиотеку react-modal
+
+## Как запускать
+
+1. Запустите docker compose up -d --build
+
+2. Для создания заказа необходимо указать менеджера и исполнителя. Для этого они должны быть в базе данных. Выполните два запроса по таким Curl (токены авторизации для этих запросов не требуются)
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/squaresolutions/garland_house.git
-git branch -M main
-git push -uf origin main
+// для менеджера
+curl -X 'POST' \
+  'http://localhost:8080/Auth/Register' \
+  -H 'accept: */*' \
+  -H 'Content-Type: application/json-patch+json' \
+  -d '{
+  "fio": "Менеджер 3",
+  "email": "m3@yandex.ru",
+  "password": "12345678",
+  "role": "Manager"
+}'
 ```
 
-## Integrate with your tools
+```
+// Для исполнителя
+curl -X 'POST' \
+  'http://localhost:8080/Auth/Register' \
+  -H 'accept: */*' \
+  -H 'Content-Type: application/json-patch+json' \
+  -d '{
+  "fio": "Исполнитель 3",
+  "email": "e3@yandex.ru",
+  "password": "12345678",
+  "role": "Executor"
+}'
+```
 
-- [ ] [Set up project integrations](https://gitlab.com/squaresolutions/garland_house/-/settings/integrations)
+3. Перейдите на localhost:3000
 
-## Collaborate with your team
+4. Зайдите под аккаунтом aleksandrpopov_2003@mail.ru, пароль - 12345678
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+**Пожалуйста, используйте Google Chrome для просмотра.** Я не знаю почему, но в Яндексе лоадеры, появляющиеся при загрузке медиа файлов, работают неправильно. Сейчас пытаюсь в этом разобраться
 
-## Test and Deploy
+## Что посмотреть
 
-Use the built-in continuous integration in GitLab.
+В целом, UI довольно понятный. Создайте заказ, загрузите фотографии во "Все объекты", файлы (а также фото и видео) в отчет, загрузите в галерею. Создайте что-нибудь в заказе, загрузите фотографии в "Визуализации" и попробуйте скачать Коммерческое предложение и смету. Оставьте комментарии. Дата выбирается с помощью удобного календаря. Скачайте приложение, и воспользуйтесь в оффлайн режиме
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+Генерация сметы осуществляется в файле generateRFP (fsd/features/OrderActions/lib/generateRFP.ts). Алгоритм для каждой сущности (Бахрома, Гибкий неон, Белт-лайт и т.п.) расположен по пути fsd/entities/_Entity name_/lib/rfpAlgs. Со сметой абсолютно та же логика и струкутра, и файлы находятся по тем же путям.
 
-***
+Замечание: чтобы успешно авторизоватся в оффлайн режиме, авторизуйтесь заранее в онлайне. После успешной авторизации программа сохраняет в Local Storage время последней авторизации, и можно авторизовыватся в режиме оффлайн в течение 1 дня
 
-# Editing this README
+В оффлайн режиме не видно никах удаленных заказов. Видны только те, которые были созданы в оффлайн режиме, и хранятся в IndexDB до тех пор, пока не произойдет синхронизация.
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+**Адаптив** Заказчик использует приложение следующим образом - замерщики выезжают на объект с планшетами. Весь остальной персонал использует компьютеры. Поэтому мы решили не тратить время на адаптив под телефоны - его нет.
