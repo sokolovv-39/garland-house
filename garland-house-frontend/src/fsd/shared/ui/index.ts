@@ -21,3 +21,4 @@ export { Spinner } from "./Spinner";
 export { VideoPlayer } from "./VideoPlayer";
 export { FileButton } from "./FileButton";
 export { LoadingPage } from "./LoadingPage";
+export { QueryClientWrapper } from "./QueryClient";

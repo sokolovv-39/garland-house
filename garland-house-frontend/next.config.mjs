@@ -1,4 +1,4 @@
-import withPWA from "next-pwa";
+import withPWA from "@ducanh2912/next-pwa";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -12,9 +12,9 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "91.236.199.216",
+        hostname: "kalc.pro",
         port: "",
-        search: "/uploads/**",
+        pathname: "/uploads/**",
       },
     ],
   },
@@ -39,10 +39,60 @@ const nextConfig = {
   },
 };
 
-// Добавляем next-pwa, избегая конфликтов с Webpack
+// Упрощенная конфигурация runtimeCaching
 export default withPWA({
   dest: "public",
-  register: true,
-  skipWaiting: true,
-  disable: process.env.NODE_ENV === "development",
+  cacheOnFrontEndNav: true,
+  aggressiveFrontEndNavCaching: true,
+  reloadOnOnline: true,
+  disable: false,
+  workboxOptions: {
+    disableDevLogs: false,
+  },
+  fallbacks: {
+    document: "/offline.html",
+  },
+  runtimeCaching: [
+    /* {
+      // Кэшируем изображения с localhost или kalc.pro
+      urlPattern:
+        /^http:\/\/localhost:8080\/uploads\/.*$|^https:\/\/kalc\.pro\/uploads\/.*$/,
+      handler: "CacheFirst",
+      options: {
+        cacheName: "image-cache",
+        expiration: {
+          maxEntries: 50,
+          maxAgeSeconds: 7 * 24 * 60 * 60, // Храним 7 дней
+        },
+      },
+    }, */
+    {
+      // Кэшируем шрифты и PDF
+      urlPattern: /\.(?:woff2?|ttf|eot)$/,
+      handler: "CacheFirst",
+      options: {
+        cacheName: "static-assets",
+        expiration: {
+          maxEntries: 20,
+          maxAgeSeconds: 30 * 24 * 60 * 60, // Храним 30 дней
+        },
+      },
+    },
+    {
+      // Кэшируем страницы и API-запросы
+      urlPattern:
+        process.env.NODE_ENV === "production"
+          ? /^https:\/\/kalc\.pro\/(?!api\/).*/i
+          : /^http:\/\/localhost:3000\/.*/i, // Для локалки все страницы на localhost:3000
+      handler: "NetworkFirst",
+      options: {
+        cacheName: "http-cache",
+        networkTimeoutSeconds: 10,
+        expiration: {
+          maxEntries: 100,
+          maxAgeSeconds: 7 * 24 * 60 * 60, // Храним 7 дней
+        },
+      },
+    },
+  ],
 })(nextConfig);

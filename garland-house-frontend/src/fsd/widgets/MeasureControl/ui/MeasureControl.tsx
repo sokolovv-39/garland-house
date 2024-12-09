@@ -1,13 +1,10 @@
 "use client";
 
 import {
-  api,
   Button,
   saveOrderRequest,
-  enumToApi,
   IDBContext,
   isServerAvailable,
-  Spinner,
   validateStore,
 } from "@/fsd/shared";
 import classes from "./MeasureControl.module.scss";
@@ -20,13 +17,13 @@ import { useRouter } from "nextjs-toploader/app";
 import { useMutation } from "@tanstack/react-query";
 import { deleteLocalOrder } from "@/fsd/entities";
 import { observer } from "mobx-react-lite";
-import { reaction } from "mobx";
 
 export const MeasureControl = observer(function ({
   orderId,
 }: {
   orderId: string;
 }) {
+  const [backendId, setBackendId] = useState<number | null>(null);
   const router = useRouter();
   const pathname = usePathname();
   const idb = useContext(IDBContext);
@@ -52,11 +49,19 @@ export const MeasureControl = observer(function ({
     setIsSaving(false);
   }
 
+  useEffect(() => {
+    (async function () {
+      const order = await idb?.orders.get(+orderId);
+      console.log("order", order);
+      setBackendId(order?.backendId || null);
+    })();
+  });
+
   return (
     <div className={classes.wrapper}>
       <Link className={classes.order} href="/orders">
         <Image src={ArrowLeft} alt="" />
-        <h2>Заказ №{orderId}</h2>
+        <h2>{backendId ? `Заказ №${backendId}` : "Новый заказ"}</h2>
       </Link>
       <div className={classes.pages}>
         <Link

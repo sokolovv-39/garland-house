@@ -22,6 +22,7 @@ export {
   AuthGuard,
   FileButton,
   LoadingPage,
+  QueryClientWrapper,
 } from "./ui";
 export {
   IDBContext,

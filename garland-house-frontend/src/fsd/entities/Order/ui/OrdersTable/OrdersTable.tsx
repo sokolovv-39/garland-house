@@ -613,7 +613,7 @@ export function OrdersTable({ searchVal }: { searchVal: string }) {
           >
             <td>
               {isError && error.message === "Offline"
-                ? `Л-${order.id}`
+                ? `Локальный ${order.id}`
                 : order.id}
             </td>
             <td className={classes.customer}>

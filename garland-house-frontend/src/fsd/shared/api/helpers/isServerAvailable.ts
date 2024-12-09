@@ -2,8 +2,8 @@ import axios, { AxiosError } from "axios";
 import { api, baseURL } from "../axiosConfig";
 
 let headUrl = baseURL;
-/* if (process.env.NODE_ENV === "production")
-  headUrl = headUrl.replace("/api", ""); */
+if (process.env.NODE_ENV === "production")
+  headUrl = headUrl.replace("/api", "");
 
 export async function isServerAvailable() {
   try {
@@ -12,7 +12,7 @@ export async function isServerAvailable() {
     return res.status === 200;
   } catch (error) {
     const axiosError = error as AxiosError;
-    if (axiosError.status === 404) {
+    if (process.env.NODE_ENV === "development" && axiosError.status === 404) {
       console.log("server available");
       return true;
     }
